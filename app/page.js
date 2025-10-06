@@ -1,17 +1,46 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const slideIn = {
+    hidden: { opacity: 0, x: -40 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fafafa] p-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen flex items-center justify-center bg-[#fafafa] p-4"
+    >
       <div className="flex w-full max-w-6xl">
         {/* Left side - Illustration */}
-        <div className="hidden lg:flex lg:w-1/2 justify-center items-center">
+        <motion.div
+          className="hidden lg:flex lg:w-1/2 justify-center items-center"
+          initial="hidden"
+          animate="visible"
+          variants={slideIn}
+        >
           <Image
             src="/images/clinic-illustration.png"
             alt="Clinic Illustration"
@@ -20,20 +49,53 @@ export default function Home() {
             className="object-contain"
             priority
           />
-        </div>
+        </motion.div>
 
         {/* Right side - Sign in form */}
-        <div className="w-full lg:mt-14 lg:w-1/2 flex justify-center">
+        <motion.div
+          className="w-full lg:mt-14 lg:w-1/2 flex justify-center"
+          initial="hidden"
+          animate="visible"
+          variants={fadeIn}
+        >
           <div className="w-full max-w-md px-8 pt-8">
             {/* Logo */}
-            <h1 className="text-2xl font-bold mb-8 text-[#25323a]">QAlert</h1>
+            <motion.h1
+              className="mb-8"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <Image
+                src="/images/qalert-logo3.png"
+                alt="QAlert"
+                width={260}
+                height={60}
+                priority
+                className="h-12 w-auto object-contain"
+              />
+            </motion.h1>
 
-            <h2 className="text-lg font-semibold mb-6 text-[#25323a]">
+            <motion.h2
+              className="text-lg font-semibold mb-6 text-[#25323a]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
               Sign In
-            </h2>
+            </motion.h2>
 
-            <form className="space-y-4">
-              <div>
+            <motion.form
+              className="space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+            >
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.5 }}
+              >
                 <label
                   htmlFor="email"
                   className="block text-sm text-gray-600 mb-1"
@@ -48,9 +110,13 @@ export default function Home() {
                   className="w-full text-sm px-4 py-3 bg-white border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:border-[#4ad294] text-[#25323a] placeholder-gray-500"
                   placeholder="Enter email"
                 />
-              </div>
+              </motion.div>
 
-              <div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
+              >
                 <label
                   htmlFor="password"
                   className="block text-sm text-gray-600 mb-1"
@@ -95,9 +161,14 @@ export default function Home() {
                     </svg>
                   </button>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex items-center justify-between">
+              <motion.div
+                className="flex items-center justify-between"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9, duration: 0.5 }}
+              >
                 <div className="flex items-center">
                   <input
                     id="remember-me"
@@ -120,28 +191,44 @@ export default function Home() {
                 >
                   Forgot Password?
                 </a>
-              </div>
+              </motion.div>
 
-              <button
+              <motion.button
                 type="submit"
                 className="w-full bg-[#4ad294] text-white py-3 px-4 rounded-lg hover:bg-[#3db583] focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium hover:cursor-pointer shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a]"
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: 1,
+                  ease: [0.23, 1, 0.32, 1], // Custom cubic-bezier for a more springy feel
+                }}
               >
                 Sign in
-              </button>
-            </form>
+              </motion.button>
+            </motion.form>
 
-            <p className="mt-6 text-center text-sm text-gray-600">
-              New user?{" "}
+            <motion.p
+              className="mt-6 text-center text-sm text-gray-600"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: 1.2,
+                ease: "easeOut",
+              }}
+            >
+              new to QAlert?{" "}
               <a
                 href="#"
                 className="text-[#4ad294] hover:text-[#3db583] font-medium"
               >
-                Register
+                Create Account
               </a>
-            </p>
+            </motion.p>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
