@@ -84,12 +84,13 @@ export default function Home() {
                     transition={{ delay: 0.2, duration: 0.5 }}
                   >
                     <Image
-                      src="/images/qalert-logo3.png"
+                      src="/images/qalert-logo1.png"
                       alt="QAlert"
                       width={260}
                       height={60}
                       priority
-                      className="h-12 w-auto object-contain"
+                      className="h-12 w-auto object-contain hover:cursor-pointer"
+                      onClick={() => window.location.reload()}
                     />
                   </motion.h1>
 
@@ -272,12 +273,13 @@ export default function Home() {
                     transition={{ delay: 0.2, duration: 0.5 }}
                   >
                     <Image
-                      src="/images/qalert-logo3.png"
+                      src="/images/qalert-logo1.png"
                       alt="QAlert"
                       width={260}
                       height={60}
                       priority
-                      className="h-12 w-auto object-contain"
+                      className="h-12 w-auto object-contain hover:cursor-pointer"
+                      onClick={() => window.location.reload()}
                     />
                   </motion.h1>
 
