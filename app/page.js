@@ -2,12 +2,337 @@
 
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [mode, setMode] = useState("signin"); // "signin" | "signup"
+  const [mode, setMode] = useState("loading"); // "loading" | "signin" | "signup" | "main"
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [activeIcon, setActiveIcon] = useState("home"); // Track which icon is active
+
+  // Check authentication state on component mount
+  useEffect(() => {
+    const checkAuthState = () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        setMode("main");
+      } else {
+        setMode("signin");
+      }
+    };
+
+    checkAuthState();
+  }, []);
+
+  // Handle sign out
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    setMode("signin");
+  };
+
+  // QueueEntryPage Component
+  const QueueEntryPage = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="h-screen bg-[#fafafa] relative overflow-hidden"
+    >
+      {/* Logo - Top Left */}
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.4 }}
+        className="fixed top-8 left-8 z-50"
+      >
+        <Image
+          src="/images/qalert-logo1.png"
+          alt="QAlert"
+          width={150}
+          height={40}
+          className="h-10 w-auto object-contain cursor-pointer hover:opacity-80 transition-opacity duration-200"
+          onClick={() => window.location.reload()}
+        />
+      </motion.div>
+
+      {/* Floating Sidebar - Individual Icons */}
+      <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 flex flex-col space-y-3">
+        {/* Home */}
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
+          onClick={() => setActiveIcon("home")}
+          className={`w-12 h-12 border-2 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 group hover:scale-105 relative ${
+            activeIcon === "home"
+              ? "bg-[#def7e4] border-[#4ad294] shadow-lg"
+              : "bg-transparent border-[#4ad294]/30 hover:bg-[#def7e4] hover:border-[#4ad294] hover:shadow-xl"
+          }`}
+        >
+          <Image
+            src="/icons/home-black.png"
+            alt="Home"
+            width={24}
+            height={24}
+            className="w-6 h-6 object-contain group-hover:scale-110 transition-all duration-300"
+          />
+          <div className="absolute left-full ml-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+            Home
+          </div>
+        </motion.div>
+
+        {/* Queue */}
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
+          onClick={() => setActiveIcon("queue")}
+          className={`w-12 h-12 border-2 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 group hover:scale-105 relative ${
+            activeIcon === "queue"
+              ? "bg-[#def7e4] border-[#4ad294] shadow-lg"
+              : "bg-transparent border-[#4ad294]/30 hover:bg-[#def7e4] hover:border-[#4ad294] hover:shadow-xl"
+          }`}
+        >
+          <Image
+            src="/icons/queue-black.png"
+            alt="My Queue"
+            width={24}
+            height={24}
+            className="w-6 h-6 object-contain group-hover:scale-110 transition-all duration-300"
+          />
+          <div className="absolute left-full ml-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+            Queues
+          </div>
+        </motion.div>
+
+        {/* Notifications */}
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
+          onClick={() => setActiveIcon("notification")}
+          className={`w-12 h-12 border-2 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 group hover:scale-105 relative ${
+            activeIcon === "notification"
+              ? "bg-[#def7e4] border-[#4ad294] shadow-lg"
+              : "bg-transparent border-[#4ad294]/30 hover:bg-[#def7e4] hover:border-[#4ad294] hover:shadow-xl"
+          }`}
+        >
+          <Image
+            src="/icons/notification-black.png"
+            alt="Notifications"
+            width={24}
+            height={24}
+            className="w-6 h-6 object-contain group-hover:scale-110 transition-all duration-300"
+          />
+          <div className="absolute left-full ml-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+            Notification
+          </div>
+        </motion.div>
+
+        {/* User */}
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.6, ease: "easeOut" }}
+          onClick={() => setActiveIcon("user")}
+          className={`w-12 h-12 border-2 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 group hover:scale-105 relative ${
+            activeIcon === "user"
+              ? "bg-[#def7e4] border-[#4ad294] shadow-lg"
+              : "bg-transparent border-[#4ad294]/30 hover:bg-[#def7e4] hover:border-[#4ad294] hover:shadow-xl"
+          }`}
+        >
+          <Image
+            src="/icons/user-black.png"
+            alt="User"
+            width={24}
+            height={24}
+            className="w-6 h-6 object-contain group-hover:scale-110 transition-all duration-300"
+          />
+          <div className="absolute left-full ml-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+            User Settings
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex items-center justify-center h-full pl-32">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="text-center max-w-2xl"
+        >
+          {/* Central Icon */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mb-8"
+          >
+            <div className="w-20 h-20 bg-[#4ad294] rounded-full flex items-center justify-center mx-auto shadow-[4px_4px_0_0_#25323a]">
+              <svg
+                className="w-10 h-10 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+          </motion.div>
+
+          <motion.h1
+            className="text-4xl font-bold text-[#25323a] mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+          >
+            How can I help you?
+          </motion.h1>
+
+          <motion.p
+            className="text-gray-600 text-lg mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.5 }}
+          >
+            Use one of the options below or explore the sidebar to start
+            managing your queue
+          </motion.p>
+
+          {/* Action Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.5 }}
+              className="bg-white rounded-lg p-6 border border-gray-200 hover:border-[#4ad294] hover:shadow-lg transition-all duration-200 cursor-pointer group shadow-[2px_2px_0_0_#25323a]"
+            >
+              <h3 className="text-[#25323a] font-semibold text-lg mb-2">
+                Join Queue
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Enter the waiting line for your appointment
+              </p>
+              <div className="flex justify-end">
+                <svg
+                  className="w-5 h-5 text-[#4ad294] group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.3, duration: 0.5 }}
+              className="bg-white rounded-lg p-6 border border-gray-200 hover:border-[#4ad294] hover:shadow-lg transition-all duration-200 cursor-pointer group shadow-[2px_2px_0_0_#25323a]"
+            >
+              <h3 className="text-[#25323a] font-semibold text-lg mb-2">
+                Check Status
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                View your current position in the queue
+              </p>
+              <div className="flex justify-end">
+                <svg
+                  className="w-5 h-5 text-[#4ad294] group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.4, duration: 0.5 }}
+              className="bg-white rounded-lg p-6 border border-gray-200 hover:border-[#4ad294] hover:shadow-lg transition-all duration-200 cursor-pointer group shadow-[2px_2px_0_0_#25323a]"
+            >
+              <h3 className="text-[#25323a] font-semibold text-lg mb-2">
+                Book Appointment
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Schedule your next visit in advance
+              </p>
+              <div className="flex justify-end">
+                <svg
+                  className="w-5 h-5 text-[#4ad294] group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Sign Out Button */}
+          <motion.button
+            onClick={handleSignOut}
+            className="bg-[#4ad294] text-white py-3 px-8 rounded-lg hover:bg-[#3db583] focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a]"
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ delay: 1.6, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          >
+            Sign Out
+          </motion.button>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+
+  // Loading Screen Component
+  const LoadingScreen = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="h-screen flex items-center justify-center bg-[#fafafa]"
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="text-center"
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-8 h-8 border-4 border-[#4ad294] border-t-transparent rounded-full mx-auto mb-4"
+        />
+        <p className="text-[#25323a] font-medium">Loading...</p>
+      </motion.div>
+    </motion.div>
+  );
 
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -37,6 +362,15 @@ export default function Home() {
     },
     exit: { opacity: 0, x: 40, transition: { duration: 0.3 } },
   };
+
+  // Conditional rendering based on mode
+  if (mode === "loading") {
+    return <LoadingScreen />;
+  }
+
+  if (mode === "main") {
+    return <QueueEntryPage />;
+  }
 
   return (
     <motion.div
