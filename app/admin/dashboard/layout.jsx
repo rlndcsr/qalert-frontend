@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import AuthGuard from "../../components/AuthGuard";
+import AuthGuard from "../../components/auth/AuthGuard";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarHidden, setIsSidebarHidden] = useState(false);
