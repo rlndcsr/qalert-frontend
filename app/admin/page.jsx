@@ -3,10 +3,13 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -15,6 +18,39 @@ export default function AdminPage() {
       y: 0,
       transition: { duration: 0.6, ease: "easeOut" },
     },
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const formData = new FormData(e.target);
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+      // Simple validation - in a real app, you'd validate against a backend
+      if (email && password) {
+        // Generate a simple token (in a real app, this would come from your backend)
+        const token = `admin_token_${Date.now()}_${Math.random()
+          .toString(36)
+          .substr(2, 9)}`;
+
+        // Store token in localStorage
+        localStorage.setItem("adminToken", token);
+
+        // Redirect to dashboard
+        router.push("/admin/dashboard");
+      } else {
+        alert("Please enter both email and password");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -73,7 +109,7 @@ export default function AdminPage() {
           Sign in to access the admin dashboard
         </p>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="admin-email"
@@ -162,9 +198,10 @@ export default function AdminPage() {
 
           <button
             type="submit"
-            className="w-full bg-[#4ad294] text-white py-3 px-4 rounded-lg hover:bg-[#3db583] focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium hover:cursor-pointer shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a]"
+            disabled={isLoading}
+            className="w-full bg-[#4ad294] text-white py-3 px-4 rounded-lg hover:bg-[#3db583] focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium hover:cursor-pointer shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign in to Admin
+            {isLoading ? "Signing in..." : "Sign in to Admin"}
           </button>
         </form>
       </motion.div>
