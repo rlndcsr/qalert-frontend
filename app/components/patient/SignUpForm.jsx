@@ -305,7 +305,11 @@ export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
 
             <motion.button
               type="submit"
-              className="w-full bg-[#4ad294] text-white py-3 px-4 rounded-lg hover:bg-[#3db583] focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium hover:cursor-pointer shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a] disabled:opacity-70 disabled:cursor-not-allowed"
+              className={`w-full py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium shadow-[4px_4px_0_0_#25323a] ${
+                isSubmitting
+                  ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-60 pointer-events-none"
+                  : "bg-[#4ad294] text-white hover:bg-[#3db583] hover:cursor-pointer active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a]"
+              }`}
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{
