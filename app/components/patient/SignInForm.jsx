@@ -180,14 +180,14 @@ export default function SignInForm({
                 />
                 <label
                   htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-600"
+                  className="ml-2 block text-sm text-gray-600 hover:cursor-pointer"
                 >
                   Remember me
                 </label>
               </div>
               <a
                 href="#"
-                className="text-sm text-[#4ad294] hover:text-[#3db583]"
+                className="text-sm text-[#4ad294] hover:text-[#3db583] hover:cursor-pointer"
               >
                 Forgot Password?
               </a>
@@ -225,7 +225,7 @@ export default function SignInForm({
                 setShowPassword(false);
                 setMode("signup");
               }}
-              className="text-[#4ad294] hover:text-[#3db583] font-medium"
+              className="text-[#4ad294] hover:text-[#3db583] font-medium hover:cursor-pointer"
             >
               Create Account
             </button>

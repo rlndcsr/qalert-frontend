@@ -2,8 +2,13 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { endpoints, postJsonPublic } from "@/app/lib/api";
+import { toast } from "sonner";
 
 export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -22,6 +27,41 @@ export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
     },
     exit: { opacity: 0, x: 40, transition: { duration: 0.3 } },
   };
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const formData = new FormData(e.target);
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirm_password");
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const payload = {
+        name: formData.get("fullname"),
+        email_address: formData.get("email_address"),
+        password,
+        password_confirmation: confirmPassword,
+        phone_number: formData.get("phone_number"),
+        id_number: formData.get("id_number") || undefined,
+      };
+
+      await postJsonPublic(endpoints.createUser(), payload);
+      toast.success("Account created successfully! You can now sign in.");
+      setTimeout(() => setMode("signin"), 1500);
+    } catch (err) {
+      toast.error(err?.message || "Failed to create account.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <motion.div
@@ -69,6 +109,8 @@ export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.6 }}
+            onSubmit={handleSubmit}
+            noValidate
           >
             <motion.div
               initial={{ opacity: 0 }}
@@ -263,7 +305,7 @@ export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
 
             <motion.button
               type="submit"
-              className="w-full bg-[#4ad294] text-white py-3 px-4 rounded-lg hover:bg-[#3db583] focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium hover:cursor-pointer shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a]"
+              className="w-full bg-[#4ad294] text-white py-3 px-4 rounded-lg hover:bg-[#3db583] focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium hover:cursor-pointer shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a] disabled:opacity-70 disabled:cursor-not-allowed"
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{
@@ -271,8 +313,10 @@ export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
                 delay: 1,
                 ease: [0.23, 1, 0.32, 1],
               }}
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
             >
-              Create account
+              {isSubmitting ? "Creating..." : "Create account"}
             </motion.button>
           </motion.form>
 
@@ -293,7 +337,7 @@ export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
                 setShowPassword(false);
                 setMode("signin");
               }}
-              className="text-[#4ad294] hover:text-[#3db583] font-medium"
+              className="text-[#4ad294] hover:text-[#3db583] font-medium hover:cursor-pointer"
             >
               Back to Sign In
             </button>
