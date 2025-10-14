@@ -3,6 +3,7 @@ export const API_BASE_URL =
 
 export const endpoints = {
   createUser: () => `${API_BASE_URL}/users`,
+  login: () => `${API_BASE_URL}/login`,
 };
 
 // For public/stateless API routes (no cookies/CSRF)
@@ -24,13 +25,41 @@ export async function postJsonPublic(url, body, init = {}) {
       // Build a concise validation error string
       const firstField = Object.keys(data.errors)[0];
       const firstMsg = data.errors[firstField]?.[0] || data.message;
-      throw new Error(firstMsg || "Validation failed");
+      const err = new Error(firstMsg || "Validation failed");
+      err.status = res.status;
+      err.details = data;
+      err.url = url;
+      throw err;
     }
     const message =
       (data && (data.message || data.error)) ||
       res.statusText ||
       "Request failed";
-    throw new Error(message);
+    const err = new Error(message);
+    err.status = res.status;
+    err.details = data;
+    err.url = url;
+    throw err;
   }
   return data;
+}
+
+// Login and return token payload
+export async function login({ emailAddress, password }) {
+  const payload = {
+    email_address: emailAddress,
+    email: emailAddress,
+    password,
+  };
+  const data = await postJsonPublic(endpoints.login(), payload, {
+    headers: { Accept: "application/json" },
+  });
+
+  // Normalize token field from possible API shapes
+  const token =
+    data?.token || data?.access_token || data?.bearer || data?.data?.token;
+  if (!token) {
+    throw new Error(data?.message || "Login failed: token not found");
+  }
+  return { token };
 }

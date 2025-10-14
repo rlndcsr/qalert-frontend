@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { endpoints } from "../../lib/api";
+import { toast } from "sonner";
 
 export default function SignInForm({
   showPassword,
@@ -9,7 +12,61 @@ export default function SignInForm({
   rememberMe,
   setRememberMe,
   setMode,
+  setActiveIcon,
 }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  async function handleSubmit(event) {
+    event.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    const form = event.currentTarget;
+    const emailInput = form.querySelector("#email_address");
+    const passwordInput = form.querySelector("#password");
+    const email = emailInput?.value?.trim();
+    const password = passwordInput?.value || "";
+
+    if (!email || !password) return;
+
+    try {
+      const response = await fetch(endpoints.login(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ email_address: email, password }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const message = data?.message || data?.error || "Login failed";
+        const details = data?.errors;
+        toast.error(message || "Login failed");
+        return;
+      }
+
+      const token =
+        data?.token || data?.access_token || data?.bearer || data?.data?.token;
+      if (!token) {
+        toast.error("Login failed: token not found");
+        return;
+      }
+
+      localStorage.setItem(
+        "token",
+        token.startsWith("Bearer ") ? token : `Bearer ${token}`
+      );
+      if (!rememberMe) {
+        // Optional: could mirror token to sessionStorage if needed
+      }
+      setMode("main");
+      setActiveIcon && setActiveIcon("home");
+    } catch (err) {
+      toast.error(err?.message || "Login failed");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -90,6 +147,7 @@ export default function SignInForm({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.6 }}
+            onSubmit={handleSubmit}
           >
             <motion.div
               initial={{ opacity: 0 }}
@@ -97,18 +155,18 @@ export default function SignInForm({
               transition={{ delay: 0.7, duration: 0.5 }}
             >
               <label
-                htmlFor="email"
+                htmlFor="email_address"
                 className="block text-sm text-gray-600 mb-1"
               >
-                Email <span className="text-red-500">*</span>
+                Email Address <span className="text-red-500">*</span>
               </label>
               <input
-                id="email"
-                name="email"
+                id="email_address"
+                name="email_address"
                 type="email"
                 required
                 className="w-full text-sm px-4 py-3 bg-white border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:border-[#4ad294] text-[#25323a] placeholder-gray-500"
-                placeholder="Enter email"
+                placeholder="Enter email address"
               />
             </motion.div>
 
@@ -195,7 +253,11 @@ export default function SignInForm({
 
             <motion.button
               type="submit"
-              className="w-full bg-[#4ad294] text-white py-3 px-4 rounded-lg hover:bg-[#3db583] focus:outline-none focus:ring-2 focus:ring-[#4ad294] focus:ring-offset-2 transition-all font-medium hover:cursor-pointer shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a]"
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+              className={`w-full bg-[#4ad294] text-white py-3 px-4 rounded-lg hover:bg-[#3db583] focus:outline-none transition-all font-medium hover:cursor-pointer shadow-[4px_4px_0_0_#25323a] active:translate-y-1 active:shadow-[2px_2px_0_0_#25323a] ${
+                isSubmitting ? "opacity-60 pointer-events-none" : ""
+              }`}
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{
@@ -204,7 +266,7 @@ export default function SignInForm({
                 ease: [0.23, 1, 0.32, 1],
               }}
             >
-              Sign in
+              {isSubmitting ? "Signing in..." : "Sign in"}
             </motion.button>
           </motion.form>
 

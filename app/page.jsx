@@ -69,6 +69,7 @@ export default function Home() {
               rememberMe={rememberMe}
               setRememberMe={setRememberMe}
               setMode={setMode}
+              setActiveIcon={setActiveIcon}
             />
           ) : (
             <SignUpForm
