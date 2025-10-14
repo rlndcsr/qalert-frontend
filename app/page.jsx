@@ -47,7 +47,7 @@ export default function Home() {
       <PatientLayout activeIcon={activeIcon} setActiveIcon={setActiveIcon}>
         {activeIcon === "home" && <HomePage handleSignOut={handleSignOut} />}
         {activeIcon === "queue" && <QueuePage />}
-        {activeIcon === "notification" && <NotificationPage />}
+        {activeIcon === "notifications" && <NotificationPage />}
         {activeIcon === "user" && <UserSettingsPage />}
       </PatientLayout>
     );

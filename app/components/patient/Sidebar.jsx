@@ -59,9 +59,9 @@ export default function Sidebar({ activeIcon, setActiveIcon }) {
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-        onClick={() => setActiveIcon("notification")}
+        onClick={() => setActiveIcon("notifications")}
         className={`w-12 h-12 border-2 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 group hover:scale-105 relative ${
-          activeIcon === "notification"
+          activeIcon === "notifications"
             ? "bg-[#def7e4] border-[#4ad294] shadow-lg"
             : "bg-transparent border-[#4ad294]/30 hover:bg-[#def7e4] hover:border-[#4ad294] hover:shadow-xl"
         }`}
@@ -74,7 +74,7 @@ export default function Sidebar({ activeIcon, setActiveIcon }) {
           className="w-6 h-6 object-contain group-hover:scale-110 transition-all duration-300"
         />
         <div className="absolute left-full ml-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
-          Notification
+          Notifications
         </div>
       </motion.div>
 
