@@ -4,6 +4,7 @@ export const API_BASE_URL =
 export const endpoints = {
   createUser: () => `${API_BASE_URL}/users`,
   login: () => `${API_BASE_URL}/login`,
+  logout: () => `${API_BASE_URL}/logout`,
 };
 
 // For public/stateless API routes (no cookies/CSRF)
@@ -62,4 +63,33 @@ export async function login({ emailAddress, password }) {
     throw new Error(data?.message || "Login failed: token not found");
   }
   return { token };
+}
+
+// Logout function
+export async function logout(token) {
+  const res = await fetch(endpoints.logout(), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const isJson = res.headers.get("content-type")?.includes("application/json");
+  const data = isJson ? await res.json().catch(() => null) : await res.text();
+
+  if (!res.ok) {
+    const message =
+      (data && (data.message || data.error)) ||
+      res.statusText ||
+      "Logout failed";
+    const err = new Error(message);
+    err.status = res.status;
+    err.details = data;
+    err.url = endpoints.logout();
+    throw err;
+  }
+
+  return data;
 }

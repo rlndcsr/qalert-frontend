@@ -10,6 +10,7 @@ import NotificationPage from "./components/pages/NotificationPage";
 import UserSettingsPage from "./components/pages/UserSettingsPage";
 import SignInForm from "./components/patient/SignInForm";
 import SignUpForm from "./components/patient/SignUpForm";
+import { logout } from "./lib/api";
 
 export default function Home() {
   const [mode, setMode] = useState("loading"); // "loading" | "signin" | "signup" | "main"
@@ -32,9 +33,21 @@ export default function Home() {
   }, []);
 
   // Handle sign out
-  const handleSignOut = () => {
-    localStorage.removeItem("token");
-    setMode("signin");
+  const handleSignOut = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        // Call the logout API to invalidate the token on the server
+        await logout(token);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Even if the API call fails, we still want to clear the local token
+    } finally {
+      // Always remove the token from localStorage and redirect to sign in
+      localStorage.removeItem("token");
+      setMode("signin");
+    }
   };
 
   // Conditional rendering based on mode
@@ -44,7 +57,11 @@ export default function Home() {
 
   if (mode === "main") {
     return (
-      <PatientLayout activeIcon={activeIcon} setActiveIcon={setActiveIcon}>
+      <PatientLayout
+        activeIcon={activeIcon}
+        setActiveIcon={setActiveIcon}
+        handleSignOut={handleSignOut}
+      >
         {activeIcon === "home" && <HomePage handleSignOut={handleSignOut} />}
         {activeIcon === "queue" && <QueuePage />}
         {activeIcon === "notifications" && <NotificationPage />}

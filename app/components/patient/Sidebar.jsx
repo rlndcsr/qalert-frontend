@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-export default function Sidebar({ activeIcon, setActiveIcon }) {
+export default function Sidebar({ activeIcon, setActiveIcon, handleSignOut }) {
   return (
     <>
       <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 flex flex-col space-y-3">
@@ -103,11 +103,13 @@ export default function Sidebar({ activeIcon, setActiveIcon }) {
           </div>
         </motion.div>
       </div>
+
+      {/* Logout */}
       <motion.div
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.6, ease: "easeOut" }}
-        onClick={() => setActiveIcon && setActiveIcon("logout")}
+        onClick={handleSignOut}
         className={`fixed left-8 bottom-8 z-50 w-12 h-12 border-2 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 group hover:scale-105 ${
           activeIcon === "logout"
             ? "bg-[#fde2e2] border-[#ef4444] shadow-lg"

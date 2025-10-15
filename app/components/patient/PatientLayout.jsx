@@ -4,7 +4,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Sidebar from "./Sidebar";
 
-export default function PatientLayout({ children, activeIcon, setActiveIcon }) {
+export default function PatientLayout({
+  children,
+  activeIcon,
+  setActiveIcon,
+  handleSignOut,
+}) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -30,7 +35,11 @@ export default function PatientLayout({ children, activeIcon, setActiveIcon }) {
       </motion.div>
 
       {/* Floating Sidebar */}
-      <Sidebar activeIcon={activeIcon} setActiveIcon={setActiveIcon} />
+      <Sidebar
+        activeIcon={activeIcon}
+        setActiveIcon={setActiveIcon}
+        handleSignOut={handleSignOut}
+      />
 
       {/* Main Content Area */}
       {children}
