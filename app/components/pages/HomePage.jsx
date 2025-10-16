@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import fetchUser from "@/app/lib/fetchUser";
 
 export default function HomePage({ handleSignOut }) {
   const [formData, setFormData] = useState({
@@ -12,6 +13,27 @@ export default function HomePage({ handleSignOut }) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const user = await fetchUser();
+        if (cancelled) return;
+        setFormData((prev) => ({
+          ...prev,
+          name: user?.name || "",
+          idNumber: user?.id_number || "",
+          phoneNumber: user?.phone_number || "",
+        }));
+      } catch (_) {
+        // ignore; user might not be logged in yet or fetch failed
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
