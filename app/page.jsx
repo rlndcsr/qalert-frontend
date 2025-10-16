@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import LoadingScreen from "./components/patient/LoadingScreen";
 import PatientLayout from "./components/patient/PatientLayout";
 import HomePage from "./components/pages/HomePage";
 import QueuePage from "./components/pages/QueuePage";
@@ -13,7 +12,7 @@ import SignUpForm from "./components/patient/SignUpForm";
 import { signOut } from "./lib/auth";
 
 export default function Home() {
-  const [mode, setMode] = useState("loading"); // "loading" | "signin" | "signup" | "main"
+  const [mode, setMode] = useState("signin"); // "signin" | "signup" | "main"
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [activeIcon, setActiveIcon] = useState("home"); // Track which icon is active
@@ -37,11 +36,6 @@ export default function Home() {
     await signOut();
     setMode("signin");
   };
-
-  // Conditional rendering based on mode
-  if (mode === "loading") {
-    return <LoadingScreen />;
-  }
 
   if (mode === "main") {
     return (
