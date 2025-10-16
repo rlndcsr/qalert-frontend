@@ -10,12 +10,14 @@ import UserSettingsPage from "./components/pages/UserSettingsPage";
 import SignInForm from "./components/patient/SignInForm";
 import SignUpForm from "./components/patient/SignUpForm";
 import { signOut } from "./lib/auth";
+import LoadingOverlay from "./components/ui/LoadingOverlay";
 
 export default function Home() {
   const [mode, setMode] = useState("signin"); // "signin" | "signup" | "main"
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [activeIcon, setActiveIcon] = useState("home"); // Track which icon is active
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Check authentication state on component mount
   useEffect(() => {
@@ -33,22 +35,30 @@ export default function Home() {
 
   // Handle sign out
   const handleSignOut = async () => {
-    await signOut();
-    setMode("signin");
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+    } finally {
+      setIsLoggingOut(false);
+      setMode("signin");
+    }
   };
 
   if (mode === "main") {
     return (
-      <PatientLayout
-        activeIcon={activeIcon}
-        setActiveIcon={setActiveIcon}
-        handleSignOut={handleSignOut}
-      >
-        {activeIcon === "home" && <HomePage handleSignOut={handleSignOut} />}
-        {activeIcon === "queue" && <QueuePage />}
-        {activeIcon === "notifications" && <NotificationPage />}
-        {activeIcon === "user" && <UserSettingsPage />}
-      </PatientLayout>
+      <>
+        <PatientLayout
+          activeIcon={activeIcon}
+          setActiveIcon={setActiveIcon}
+          handleSignOut={handleSignOut}
+        >
+          {activeIcon === "home" && <HomePage handleSignOut={handleSignOut} />}
+          {activeIcon === "queue" && <QueuePage />}
+          {activeIcon === "notifications" && <NotificationPage />}
+          {activeIcon === "user" && <UserSettingsPage />}
+        </PatientLayout>
+        <LoadingOverlay show={isLoggingOut} label="Signing out..." />
+      </>
     );
   }
 
@@ -79,6 +89,7 @@ export default function Home() {
           )}
         </AnimatePresence>
       </div>
+      <LoadingOverlay show={isLoggingOut} label="Signing out..." />
     </motion.div>
   );
 }
