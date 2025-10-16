@@ -46,6 +46,10 @@ export default function Home() {
     } finally {
       // Always remove the token from localStorage and redirect to sign in
       localStorage.removeItem("token");
+      // Also clear any stored user identifiers
+      localStorage.removeItem("user_id");
+      // Backward-compat: clear older key if it exists
+      localStorage.removeItem("userId");
       setMode("signin");
     }
   };

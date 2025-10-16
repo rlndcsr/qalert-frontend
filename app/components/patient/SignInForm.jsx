@@ -56,6 +56,19 @@ export default function SignInForm({
         "token",
         token.startsWith("Bearer ") ? token : `Bearer ${token}`
       );
+
+      // Persist the authenticated user's id (user_id) for later use
+      const userId =
+        (data && data.user_id) ||
+        (data && data.user && data.user.user_id) ||
+        (data && data.data && data.data.user && data.data.user.user_id) ||
+        (data && data.data && data.data.user_id) ||
+        (data && data.id) ||
+        (data && data.user && data.user.id) ||
+        (data && data.data && data.data.id);
+      if (userId !== undefined && userId !== null) {
+        localStorage.setItem("user_id", String(userId));
+      }
       if (!rememberMe) {
         // Optional: could mirror token to sessionStorage if needed
       }
