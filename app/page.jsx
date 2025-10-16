@@ -10,7 +10,7 @@ import NotificationPage from "./components/pages/NotificationPage";
 import UserSettingsPage from "./components/pages/UserSettingsPage";
 import SignInForm from "./components/patient/SignInForm";
 import SignUpForm from "./components/patient/SignUpForm";
-import { logout } from "./lib/api";
+import { signOut } from "./lib/auth";
 
 export default function Home() {
   const [mode, setMode] = useState("loading"); // "loading" | "signin" | "signup" | "main"
@@ -34,24 +34,8 @@ export default function Home() {
 
   // Handle sign out
   const handleSignOut = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        // Call the logout API to invalidate the token on the server
-        await logout(token);
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-      // Even if the API call fails, we still want to clear the local token
-    } finally {
-      // Always remove the token from localStorage and redirect to sign in
-      localStorage.removeItem("token");
-      // Also clear any stored user identifiers
-      localStorage.removeItem("user_id");
-      // Backward-compat: clear older key if it exists
-      localStorage.removeItem("userId");
-      setMode("signin");
-    }
+    await signOut();
+    setMode("signin");
   };
 
   // Conditional rendering based on mode

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { endpoints, postJsonPublic } from "@/app/lib/api";
+import { signUp } from "@/app/lib/auth";
 import { toast } from "sonner";
 
 export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
@@ -44,16 +45,14 @@ export default function SignUpForm({ showPassword, setShowPassword, setMode }) {
     setIsSubmitting(true);
 
     try {
-      const payload = {
-        name: formData.get("fullname"),
-        email_address: formData.get("email_address"),
+      await signUp({
+        fullName: formData.get("fullname"),
+        emailAddress: formData.get("email_address"),
         password,
-        password_confirmation: confirmPassword,
-        phone_number: formData.get("phone_number"),
-        id_number: formData.get("id_number") || undefined,
-      };
-
-      await postJsonPublic(endpoints.createUser(), payload);
+        confirmPassword,
+        phoneNumber: formData.get("phone_number"),
+        idNumber: formData.get("id_number") || undefined,
+      });
       toast.success("Account created successfully! You can now sign in.");
       setTimeout(() => setMode("signin"), 1500);
     } catch (err) {

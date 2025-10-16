@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { endpoints } from "../../lib/api";
+import { signIn } from "@/app/lib/auth";
 import { toast } from "sonner";
 
 export default function SignInForm({
@@ -19,56 +19,14 @@ export default function SignInForm({
     event.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const form = event.currentTarget;
-    const emailInput = form.querySelector("#email_address");
-    const passwordInput = form.querySelector("#password");
-    const email = emailInput?.value?.trim();
-    const password = passwordInput?.value || "";
+    const formData = new FormData(event.currentTarget);
+    const email = (formData.get("email_address") || "").toString().trim();
+    const password = (formData.get("password") || "").toString();
 
     if (!email || !password) return;
 
     try {
-      const response = await fetch(endpoints.login(), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ email_address: email, password }),
-      });
-
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        const message = data?.message || data?.error || "Login failed";
-        const details = data?.errors;
-        toast.error(message || "Login failed");
-        return;
-      }
-
-      const token =
-        data?.token || data?.access_token || data?.bearer || data?.data?.token;
-      if (!token) {
-        toast.error("Login failed: token not found");
-        return;
-      }
-
-      localStorage.setItem(
-        "token",
-        token.startsWith("Bearer ") ? token : `Bearer ${token}`
-      );
-
-      // Persist the authenticated user's id (user_id) for later use
-      const userId =
-        (data && data.user_id) ||
-        (data && data.user && data.user.user_id) ||
-        (data && data.data && data.data.user && data.data.user.user_id) ||
-        (data && data.data && data.data.user_id) ||
-        (data && data.id) ||
-        (data && data.user && data.user.id) ||
-        (data && data.data && data.data.id);
-      if (userId !== undefined && userId !== null) {
-        localStorage.setItem("user_id", String(userId));
-      }
+      await signIn({ emailAddress: email, password });
       if (!rememberMe) {
         // Optional: could mirror token to sessionStorage if needed
       }
