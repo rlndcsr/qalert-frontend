@@ -17,12 +17,14 @@ export default function PatientLayout({
       transition={{ duration: 0.6 }}
       className="h-screen bg-[#fafafa] relative overflow-hidden"
     >
+      {/* Sidebar Visual Background */}
+      <div className="fixed left-0 top-0 bottom-0 w-48 z-40" />
       {/* Logo - Top Left */}
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.4 }}
-        className="fixed top-8 left-8 z-50"
+        className="fixed top-8 left-8 z-50 pt-2"
       >
         <Image
           src="/images/qalert-logo1.png"

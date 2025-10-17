@@ -41,8 +41,6 @@ export async function signIn({ emailAddress, password }) {
       },
     });
   } catch (err) {
-    // Surface concise error while preserving original
-    console.error("signIn error", err?.message || err, err?.details);
     throw err;
   }
   // persist locally

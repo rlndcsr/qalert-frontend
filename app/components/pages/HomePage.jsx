@@ -69,18 +69,18 @@ export default function HomePage({ handleSignOut }) {
 
   if (submitSuccess) {
     return (
-      <div className="flex items-center justify-center h-full pl-32">
+      <div className="min-h-full pl-48 bg-gradient-to-br from-gray-50 via-white to-gray-100">
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-md"
+          className="max-w-xl px-6 md:px-10 py-10 mx-auto"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
-            className="w-20 h-20 bg-[#4ad294] rounded-full flex items-center justify-center mx-auto mb-6"
+            className="w-20 h-20 bg-[#4ad294] rounded-full flex items-center justify-center mb-6"
           >
             <svg
               className="w-10 h-10 text-white"
@@ -121,18 +121,18 @@ export default function HomePage({ handleSignOut }) {
   }
 
   return (
-    <div className="flex items-center justify-center h-full pl-32 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-full pl-48 bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.6 }}
-        className="w-full max-w-4xl"
+        className="px-6 md:px-10 py-10 max-w-5xl mx-auto w-full"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="text-center mb-12"
+          className="mb-8"
         >
           <h1 className="text-4xl font-bold text-[#25323a] mb-3">Join Queue</h1>
           <p className="text-[#25323a] text-md">
@@ -145,10 +145,10 @@ export default function HomePage({ handleSignOut }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.5 }}
           onSubmit={handleSubmit}
-          className="p-8"
+          className="mt-32"
         >
           {/* Bento Grid Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl">
             {/* Name Field - Top Left */}
             <div className="md:col-span-1">
               <label
